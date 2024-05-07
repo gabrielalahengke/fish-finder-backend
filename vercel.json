@@ -3,12 +3,7 @@
   "builds": [
     {
       "src": "app.js",
-      "use": "@vercel/node",
-      "config": {
-        "prisma": {
-          "generate": "true"
-        }
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
