@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id         String       @id @default(uuid())
+  username   String       @unique @db.VarChar(100)
+  password   String       @db.Text
+  Coordinate coordinate[]
+}
+
+model coordinate {
+  id              String  @id @default(uuid())
+  user            user    @relation(fields: [coordinat_owner], references: [id])
+  coordinat_owner String
+  latitude        Decimal
+  longitude       Decimal
+}
+
+model authentications {
+  token String @unique
+}
