@@ -11,6 +11,10 @@ const policies = {
 
     // mendapatkan titik koordinat
     can('read', 'Coordinate', { id: user.id });
+
+
+    // hapus titik koordinat
+    can('delete', 'Coordinate');
   },
 };
 
