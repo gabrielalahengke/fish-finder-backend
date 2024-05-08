@@ -110,7 +110,69 @@ const getCoordinatePointByUserId = async (req, res, next) => {
   }
 };
 
+const deleteCoordinateById = async (req, res) => {
+  try {
+    // ambil id coordinate dari params
+    const { id } = req.params;
+
+    if (!req.user) {
+      throw new AuthenticationError('Anda belum melakukan login');
+    }
+
+    let policy = policyFor(req.user);
+
+    if (!policy.can('delete', 'Coordinate')) {
+      throw new AuthorizationError(
+        'Anda tidak memiliki akses untuk menghapus titik'
+      );
+    }
+
+    // memastikan id coordinate tersebut ada dan cari juga sesuai id user
+    const isCoordinate = await prisma.coordinate.findFirst({
+      where: {
+        AND: [
+          {
+            id,
+          },
+          {
+            coordinat_owner: req.user.id,
+          },
+        ],
+      },
+    });
+
+    if (!isCoordinate) {
+      throw new NotFoundError('Id coordinate tidak ditemukan');
+    }
+
+    const coordinate = await prisma.coordinate.delete({
+      where: {
+        id,
+      },
+    });
+
+    return res.json({
+      status: 'success',
+      message: Berhasil hapus titik dengan latitude = ${coordinate.latitude} dan longitude = ${coordinate.longitude},
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({
+        status: 'fail',
+        message: error.message,
+      });
+    } else {
+      console.log(error);
+      return res.status(500).json({
+        status: 'fail',
+        message: 'error terjadi pada server',
+      });
+    }
+  }
+};
+
 module.exports = {
   createCoordinate,
   getCoordinatePointByUserId,
+  deleteCoordinateById
 };
