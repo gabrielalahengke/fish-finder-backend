@@ -153,7 +153,7 @@ const deleteCoordinateById = async (req, res) => {
 
     return res.json({
       status: 'success',
-      message: Berhasil hapus titik dengan latitude = ${coordinate.latitude} dan longitude = ${coordinate.longitude},
+      message: `Berhasil hapus titik dengan latitude = ${coordinate.latitude} dan longitude = ${coordinate.longitude}`,
     });
   } catch (error) {
     if (error.statusCode) {
